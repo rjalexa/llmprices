@@ -1,0 +1,171 @@
+# config/families.yaml
+# ordinal is implicit: list order == generational order.
+# release_date is optional; when omitted the backend uses output.json `created`, then first_seen.
+meta:
+  blend_ratio: {input: 3, output: 1}   # blended $/1M = (3*prompt + 1*completion) / 4
+
+# A fork is a generation that fans out into multiple tiers: `from` is the model
+# that was current when the split happened, `to` lists every tier that came out
+# of it. Pairs that are already consecutive members of one family (e.g.
+# 5.5 -> Sol) draw as normal successions; the rest draw as labeled branches.
+forks:
+  - from: openai/gpt-5.5
+    to: [openai/gpt-5.6-sol, openai/gpt-5.6-terra, openai/gpt-5.6-luna]
+  - from: anthropic/claude-opus-4.8
+    to: [anthropic/claude-opus-5, anthropic/claude-fable-5]
+
+families:
+  - key: anthropic-opus
+    label: "Claude Opus"
+    vendor: Anthropic
+    group: frontier-us
+    members: [anthropic/claude-opus-4, anthropic/claude-opus-4.1, anthropic/claude-opus-4.5,
+              anthropic/claude-opus-4.6, anthropic/claude-opus-4.7, anthropic/claude-opus-4.8,
+              anthropic/claude-opus-5]
+    variants: [anthropic/claude-opus-4.7-fast, anthropic/claude-opus-4.8-fast, anthropic/claude-opus-5-fast]
+
+  - key: anthropic-sonnet
+    label: "Claude Sonnet"
+    vendor: Anthropic
+    group: frontier-us
+    members: [anthropic/claude-sonnet-4, anthropic/claude-sonnet-4.5,
+              anthropic/claude-sonnet-4.6, anthropic/claude-sonnet-5]
+
+  - key: anthropic-haiku
+    label: "Claude Haiku"
+    vendor: Anthropic
+    group: frontier-us
+    members: [anthropic/claude-3-haiku, anthropic/claude-haiku-4.5]
+
+  # A new tier above Opus, launched 2026-06-10 at 2x Opus pricing while
+  # Opus 4.8 was still Anthropic's top model.
+  - key: anthropic-fable
+    label: "Claude Fable"
+    vendor: Anthropic
+    group: frontier-us
+    members: [anthropic/claude-fable-5]
+
+  # At 5.6 OpenAI split the lineup into three named tiers, all launched
+  # 2026-07-10: Sol ($5/$30 — the flagship, at exactly GPT-5.5's price),
+  # Terra ($2.50/$15, a new middle tier) and Luna ($1/$6, the small tier).
+  # Sol therefore continues this line; Luna continues the mini line; Terra
+  # starts a line of its own. The split itself is declared under `forks:`.
+  - key: openai-flagship
+    label: "OpenAI flagship"
+    vendor: OpenAI
+    group: frontier-us
+    members: [openai/gpt-4o, openai/gpt-4.1, openai/gpt-5, openai/gpt-5.1, openai/gpt-5.2,
+              openai/gpt-5.4, openai/gpt-5.5, openai/gpt-5.6-sol]
+
+  - key: openai-terra
+    label: "GPT Terra"
+    vendor: OpenAI
+    group: frontier-us
+    members: [openai/gpt-5.6-terra]
+
+  - key: openai-mini
+    label: "OpenAI mini"
+    vendor: OpenAI
+    group: frontier-us
+    members: [openai/gpt-4o-mini, openai/gpt-4.1-mini, openai/gpt-5-mini, openai/gpt-5.4-mini,
+              openai/gpt-5.6-luna]
+
+  - key: openai-codex
+    label: "OpenAI Codex"
+    vendor: OpenAI
+    group: frontier-us
+    members: [openai/gpt-5.1-codex, openai/gpt-5.1-codex-max, openai/gpt-5.2-codex, openai/gpt-5.3-codex]
+
+  - key: google-pro
+    label: "Gemini Pro"
+    vendor: Google
+    group: frontier-us
+    members: [google/gemini-2.5-pro, google/gemini-3.1-pro-preview]
+
+  - key: google-flash
+    label: "Gemini Flash"
+    vendor: Google
+    group: frontier-us
+    members: [google/gemini-2.5-flash, google/gemini-3-flash-preview,
+              google/gemini-3.5-flash, google/gemini-3.6-flash]
+
+  - key: xai-grok
+    label: "Grok"
+    vendor: xAI
+    group: frontier-us
+    members: [x-ai/grok-4.20, x-ai/grok-4.3, x-ai/grok-4.5]
+
+  - key: deepseek-v
+    label: "DeepSeek V"
+    vendor: DeepSeek
+    group: china
+    members: [deepseek/deepseek-chat, deepseek/deepseek-chat-v3-0324, deepseek/deepseek-chat-v3.1,
+              deepseek/deepseek-v3.1-terminus, deepseek/deepseek-v3.2,
+              deepseek/deepseek-v4-flash, deepseek/deepseek-v4-flash-0731, deepseek/deepseek-v4-pro]
+
+  - key: deepseek-r
+    label: "DeepSeek R"
+    vendor: DeepSeek
+    group: china
+    members: [deepseek/deepseek-r1, deepseek/deepseek-r1-0528]
+
+  - key: qwen-flagship
+    label: "Qwen flagship"
+    vendor: Alibaba
+    group: china
+    members: [qwen/qwen3-235b-a22b, qwen/qwen3-235b-a22b-2507, qwen/qwen3-max,
+              qwen/qwen3.5-397b-a17b]
+    variants: [qwen/qwen3-max-thinking, qwen/qwen3-235b-a22b-thinking-2507]
+
+  - key: qwen-coder
+    label: "Qwen Coder"
+    vendor: Alibaba
+    group: china
+    members: [qwen/qwen3-coder, qwen/qwen3-coder-plus, qwen/qwen3-coder-next]
+
+  - key: kimi
+    label: "Kimi"
+    vendor: Moonshot AI
+    group: china
+    members: [moonshotai/kimi-k2, moonshotai/kimi-k2-0905, moonshotai/kimi-k2.5,
+              moonshotai/kimi-k2.6, moonshotai/kimi-k3]
+    variants: [moonshotai/kimi-k2-thinking, moonshotai/kimi-k2.7-code]
+
+  - key: glm
+    label: "GLM"
+    vendor: Z.ai
+    group: china
+    members: [z-ai/glm-4.5, z-ai/glm-4.6, z-ai/glm-4.7, z-ai/glm-5, z-ai/glm-5.1, z-ai/glm-5.2]
+    variants: [z-ai/glm-4.5-air, z-ai/glm-4.7-flash, z-ai/glm-5-turbo]
+
+  - key: minimax
+    label: "MiniMax"
+    vendor: MiniMax
+    group: china
+    members: [minimax/minimax-m1, minimax/minimax-m2, minimax/minimax-m2.1,
+              minimax/minimax-m2.5, minimax/minimax-m2.7, minimax/minimax-m3]
+
+  - key: tencent
+    label: "Hunyuan"
+    vendor: Tencent
+    group: china
+    members: [tencent/hunyuan-a13b-instruct, tencent/hy3]
+
+  - key: mistral-large
+    label: "Mistral Large"
+    vendor: Mistral
+    group: eu
+    members: [mistralai/mistral-large-2407, mistralai/mistral-large-2512]
+
+  - key: mistral-medium
+    label: "Mistral Medium"
+    vendor: Mistral
+    group: eu
+    members: [mistralai/mistral-medium-3, mistralai/mistral-medium-3.1, mistralai/mistral-medium-3-5]
+
+  - key: mistral-small
+    label: "Mistral Small"
+    vendor: Mistral
+    group: eu
+    members: [mistralai/mistral-small-24b-instruct-2501, mistralai/mistral-small-3.1-24b-instruct,
+              mistralai/mistral-small-3.2-24b-instruct, mistralai/mistral-small-2603]

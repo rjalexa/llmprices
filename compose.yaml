@@ -1,0 +1,46 @@
+name: llm-price-atlas
+
+services:
+  backend:
+    build:
+      context: ./backend
+    environment:
+      ATLAS_DB: /app/data/atlas.db
+      ATLAS_FAMILIES_FILE: /app/config/families.yaml
+      ATLAS_CACHE_DIR: /app/data/.cache
+      ATLAS_ADMIN_TOKEN: ${ATLAS_ADMIN_TOKEN:-}
+      ATLAS_INGEST_ON_EMPTY: ${ATLAS_INGEST_ON_EMPTY:-true}
+      ATLAS_CORS_ORIGINS: ${ATLAS_CORS_ORIGINS:-http://localhost:5173}
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+    ports:
+      - "${ATLAS_API_PORT:-8000}:8000"
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "${ATLAS_WEB_PORT:-5173}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # One-shot refresh: `docker compose --profile ingest up ingest`
+  # Upstream only publishes twice a day, so this is a manual/cron job rather
+  # than a long-running service.
+  ingest:
+    profiles: ["ingest"]
+    build:
+      context: ./backend
+    environment:
+      ATLAS_DB: /app/data/atlas.db
+      ATLAS_FAMILIES_FILE: /app/config/families.yaml
+      ATLAS_CACHE_DIR: /app/data/.cache
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config:ro
+    command: ["atlas", "ingest"]
+    restart: "no"

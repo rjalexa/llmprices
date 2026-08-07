@@ -1,0 +1,71 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Upstream publishes twice a day; refresh the baked data each morning so the
+  # hosted site doesn't drift from the ledger.
+  schedule:
+    - cron: "20 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish rather than cancelling it mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - uses: pnpm/action-setup@v4
+
+      - name: Backend tests
+        run: uv run --project backend python -m pytest backend/tests -q
+
+      - name: Ingest the live ledger
+        run: uv run --project backend atlas ingest
+
+      - name: Bake the static payload
+        run: uv run --project backend atlas export-static --out frontend/public/atlas.json
+
+      - name: Install frontend deps
+        run: pnpm --dir frontend install --frozen-lockfile
+
+      - name: Frontend tests
+        run: pnpm --dir frontend test
+
+      - name: Build
+        env:
+          VITE_STATIC_DATA: "1"
+          VITE_BASE_PATH: /${{ github.event.repository.name }}/
+        run: pnpm --dir frontend build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: frontend/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

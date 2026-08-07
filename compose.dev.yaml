@@ -1,0 +1,38 @@
+# Development overlay:
+#   docker compose -f compose.yaml -f compose.dev.yaml up
+#
+# Backend reloads on source edits; the frontend runs Vite with HMR instead of
+# nginx, proxying /api to the backend container.
+name: llm-price-atlas
+
+services:
+  backend:
+    build:
+      context: ./backend
+      target: builder
+    volumes:
+      - ./backend/src:/app/src
+      - ./data:/app/data
+      - ./config:/app/config:ro
+    environment:
+      ATLAS_DB: /app/data/atlas.db
+      ATLAS_FAMILIES_FILE: /app/config/families.yaml
+      ATLAS_CACHE_DIR: /app/data/.cache
+      ATLAS_CORS_ORIGINS: http://localhost:5173
+    command:
+      ["uv", "run", "uvicorn", "atlas.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      VITE_BACKEND_URL: http://backend:8000
+    command: sh -c "corepack enable pnpm && pnpm install && pnpm dev --host 0.0.0.0"
+    ports:
+      - "5173:5173"
+    depends_on:
+      backend:
+        condition: service_started
