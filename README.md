@@ -314,7 +314,8 @@ there and the decay view drops them rather than letting them collapse the domain
 ## Licence
 
 [MIT](LICENSE) — fork it, build on it, ship it commercially; the licence asks nothing of you but the
-notice. Contributions are accepted under the same terms.
+notice. Contributions are accepted under the same terms. See [NOTICE.md](NOTICE.md) for the full
+attribution picture.
 
 The **price data is not ours to licence.** It belongs to
 [`jvrck/openrouterlist`](https://github.com/jvrck/openrouterlist) by
