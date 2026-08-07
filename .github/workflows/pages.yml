@@ -33,7 +33,11 @@ jobs:
         with:
           node-version: 22
 
+      # the pnpm version is pinned by `packageManager` in frontend/package.json,
+      # which is also what the frontend Dockerfile uses — one source of truth
       - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: frontend/package.json
 
       - name: Backend tests
         run: uv run --project backend python -m pytest backend/tests -q
