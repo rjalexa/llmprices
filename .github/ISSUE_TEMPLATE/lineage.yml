@@ -1,0 +1,56 @@
+name: Lineage correction
+description: A model is in the wrong family, generation order, or fork — especially if you work on it
+title: "lineage: "
+labels: ["lineage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks — this is the most useful kind of report we get.
+
+        Lineages in `config/families.yaml` are declared by hand, so some are judgement calls and a
+        few are simply wrong. **If you maintain one of these model families, we will take your word
+        over our inference.** No need to be thorough; one line is plenty.
+
+        Wrong *price* or *date* instead? That comes from
+        [jvrck/openrouterlist](https://github.com/jvrck/openrouterlist) — please report it there.
+
+  - type: input
+    id: models
+    attributes:
+      label: Which model id(s)?
+      placeholder: openai/gpt-5.6-terra
+    validations:
+      required: true
+
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What does the atlas currently show, and what is correct?
+      placeholder: |
+        Shows Terra as a fork off GPT-5.5, with Sol continuing the flagship line.
+        Terra is actually the flagship 5.6; Sol is the premium tier above it.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of correction is it?
+      options:
+        - Wrong family / lineage
+        - Wrong generation order
+        - Should be a variant, not a generation (or the reverse)
+        - Wrong fork — a split into tiers is missing or misattributed
+        - A model is missing from the roster
+        - Something else
+    validations:
+      required: true
+
+  - type: textarea
+    id: source
+    attributes:
+      label: Anything backing it up?
+      description: A launch post or docs link helps, but "I work on this model" is enough.
+    validations:
+      required: false

@@ -1,0 +1,10 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Wrong price, wrong date, or a missing model
+    url: https://github.com/jvrck/openrouterlist/issues
+    about: >-
+      The price data is collected by jvrck/openrouterlist. Anything about the numbers
+      themselves belongs there — this project only visualises them.
+  - name: How lineages are decided
+    url: https://github.com/rjalexa/llmprices/blob/main/CONTRIBUTING.md
+    about: The calls we are least sure about, and how to send a correction.

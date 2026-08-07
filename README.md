@@ -6,6 +6,19 @@ you see**.
 
 **[→ Open the live atlas](https://rjalexa.github.io/llmprices/)**
 
+> ### 🙏 None of this exists without [`jvrck/openrouterlist`](https://github.com/jvrck/openrouterlist)
+>
+> Every number here was collected by **[Jim Vrckovski (@jvrck)](https://github.com/jvrck)**, who has
+> been quietly snapshotting OpenRouter's model catalogue **every 12 hours since 21 September 2024**
+> and publishing the result as a clean, pre-built change-point ledger under the MIT licence.
+>
+> That is the whole dataset. This project only draws pictures of it. Nobody can go back and collect
+> 2024 prices today — that history exists *only* because someone started recording before anyone
+> asked for it, and kept it running for two years without fanfare. **Thank you, Jim.**
+>
+> **[⭐ Go star the source repo](https://github.com/jvrck/openrouterlist)** — it is the part that
+> deserves the credit.
+
 [![Deploy to GitHub Pages](https://github.com/rjalexa/llmprices/actions/workflows/pages.yml/badge.svg)](https://github.com/rjalexa/llmprices/actions/workflows/pages.yml)
 
 ![The succession timeline: each vendor's flagship line, with the price delta at every
@@ -98,6 +111,10 @@ These are the five things that most often lead people to misread this data.
 
 Source: [`jvrck/openrouterlist`](https://github.com/jvrck/openrouterlist) (MIT), which snapshots
 `https://openrouter.ai/api/v1/models` every 12 hours.
+
+One detail worth knowing: the 2024-09-21 wall in gotcha 3 is not an artefact of this project — it is
+the day [@jvrck](https://github.com/jvrck) created the upstream repo and started recording. Every
+price before it is simply gone, for everyone.
 
 ---
 
@@ -199,6 +216,22 @@ docs/original-plan.md    the handoff spec this was built from
 .github/workflows/       ingest → bake → build → deploy to Pages
 ```
 
+### Lineages are judgement calls — please correct ours
+
+Some of the groupings in `config/families.yaml` are debatable and a few are probably wrong. We
+decided that `gpt-5.6-sol` continues the OpenAI flagship line while Terra and Luna fork off, that
+`claude-fable-5` is a new tier rather than an Opus successor, and that `:thinking` modes are
+variants rather than generations. Those are inferences from launch dates and pricing, not
+statements from the labs.
+
+**If you work on one of these models, you are the authority and we will take your word for it.**
+[Open a lineage issue](https://github.com/rjalexa/llmprices/issues/new?template=lineage.yml) — one
+line is plenty — or send a PR against the YAML. The calls we're least confident about are listed in
+[CONTRIBUTING.md](CONTRIBUTING.md).
+
+Wrong *price* or *date*? That is upstream in
+[`jvrck/openrouterlist`](https://github.com/jvrck/openrouterlist), not here.
+
 ### Adding a model
 
 Edit `config/families.yaml` — list order is generational order — then re-run ingest. Lineages are
@@ -275,3 +308,16 @@ Everything below is a place the data disagreed with it.
 A handful of ledger points are a genuine `$0.00` (a host briefly serving a model free). They are
 real data, but they cannot be placed on a log or ratio axis, so the log timeline breaks the line
 there and the decay view drops them rather than letting them collapse the domain.
+
+---
+
+## Licence
+
+[MIT](LICENSE) — fork it, build on it, ship it commercially; the licence asks nothing of you but the
+notice. Contributions are accepted under the same terms.
+
+The **price data is not ours to licence.** It belongs to
+[`jvrck/openrouterlist`](https://github.com/jvrck/openrouterlist) by
+[Jim Vrckovski](https://github.com/jvrck) (also MIT) and originates from OpenRouter's public models
+API. If you reuse the data, credit that project rather than this one — and
+[give it a star](https://github.com/jvrck/openrouterlist).
